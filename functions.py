@@ -23,7 +23,7 @@ def getDataBaseLandMarks(url):
         database_landmarks = list(response.json())
         for l in database_landmarks:
             l[2] = np.array(eval(l[2]))
-            print("Se obtuvieron los landmarks desde la BBDD")
+        print("Se obtuvieron los landmarks desde la BBDD")
     else:
         print(f"Error: {response.status_code}")
     return database_landmarks
