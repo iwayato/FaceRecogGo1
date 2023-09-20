@@ -8,9 +8,9 @@ databaseLandmarks = functions.getDataBaseLandMarks("http://127.0.0.1:5000/getlan
 
 while True:
     (rpiName, frame) = imageHub.recv_image()
+    frame = cv2.rotate(frame, cv2.ROTATE_180)
     imageHub.send_reply(b'OK')
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
     faces = detector(grayFrame)
         
     for face in faces:    
