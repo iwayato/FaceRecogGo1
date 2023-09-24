@@ -5,18 +5,6 @@ import numpy as np
 def getDetector():
     return dlib.get_frontal_face_detector()
 
-def getPredictor():
-    return dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
-
-def extractLandmarks(gray_frame, face):
-    predictor = getPredictor()
-    shape = predictor(gray_frame, face)
-    landmarks = np.array([(shape.part(i).x, shape.part(i).y) for i in range(68)])
-    return landmarks
-
-def euclideanDistance(landmarks1, landmarks2):
-    return np.sqrt(np.sum((landmarks1 - landmarks2) ** 2))
-
 def getDataBaseLandMarks(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -27,6 +15,9 @@ def getDataBaseLandMarks(url):
     else:
         print(f"Error: {response.status_code}")
     return database_landmarks
+
+def euclideanDistance(landmarks1, landmarks2):
+    return np.sqrt(np.sum((landmarks1 - landmarks2) ** 2))
 
 def euclideanDistance(detectedLandmarks, dbLandmarks):
     totalDistance = 0.0
