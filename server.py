@@ -1,5 +1,3 @@
-import eventlet
-import socketio
 import imagezmq
 import cv2
 import functions
@@ -11,23 +9,7 @@ detector = functions.getDetector()
 # databaseLandmarks = functions.getDataBaseLandMarks("http://127.0.0.1:5000/getlandmarks")
 predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 
-sio = socketio.Server(cors_allowed_origins = '*')
-app = socketio.WSGIApp(sio)
-
-@sio.on('connect')
-def handle_connect(sid, environ):
-    print(f'Client connected: {sid}')
-
-@sio.on('disconnect')
-def handle_disconnect(sid):
-    print(f'Client disconnected: {sid}')
-    
-@sio.on('create-something')
-def handle_message(sid, data):
-    print(f'Message from client: {data}')
-
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('', 4000)), app)
     while True:
         (rpiName, frame) = imageHub.recv_image()
         # frame = cv2.rotate(frame, cv2.ROTATE_180)
