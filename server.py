@@ -12,9 +12,9 @@ predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 if __name__ == '__main__':
     while True:
         (rpiName, frame) = imageHub.recv_image()
-        # frame = cv2.rotate(frame, cv2.ROTATE_180)
         imageHub.send_reply(b'OK')
         grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Detecta rostros en la imagen
         faces = detector(grayFrame)
             
         for face in faces:    
