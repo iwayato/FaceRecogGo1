@@ -7,7 +7,7 @@ import numpy as np
 imageHub = imagezmq.ImageHub()
 detector = functions.getDetector()
 # databaseLandmarks = functions.getDataBaseLandMarks("http://127.0.0.1:5000/getlandmarks")
-predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('./Utils/shape_predictor_68_face_landmarks.dat')
 
 if __name__ == '__main__':
     while True:

@@ -4,10 +4,11 @@ import cv2
 
 imageHub = imagezmq.ImageHub()
 detector = functions.getDetector()
-# sr = cv2.dnn_superres.DnnSuperResImpl_create()
-# path = "./Server/FSRCNN_x4.pb"
-# sr.readModel(path)
-# sr.setModel("espcn", 4)
+
+sr = cv2.dnn_superres.DnnSuperResImpl_create()
+path = "./Models/FSRCNN_x4.pb"
+sr.readModel(path)
+sr.setModel("espcn", 4)
 
 while True:
     (rpiName, frame) = imageHub.recv_image()
