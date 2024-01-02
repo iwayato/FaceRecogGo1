@@ -2,12 +2,13 @@ import dlib
 import cv2
 import numpy as np
 
-video = cv2.VideoCapture("./Videos/test_bad_res.mp4")
-width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-scaleFactor = 0.5
-newWidth = int(width * scaleFactor)
-newHeight = int(height * scaleFactor)
+video = cv2.VideoCapture("./Videos/test_sm_res_crop.mp4")
+
+# width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+# height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+# scaleFactor = 0.5
+# newWidth = int(width * scaleFactor)
+# newHeight = int(height * scaleFactor)
 
 predictorPath = './Predictors/shape_predictor_68_face_landmarks.dat'
 faceRecogPath = './Models/dlib_face_recognition_resnet_model_v1.dat'
@@ -18,14 +19,16 @@ faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 
 while True:
     ret, frame = video.read()
-    frame = cv2.resize(frame, (newWidth, newHeight))
-    facesDetected = detector(frame, 1)
+    # frame = cv2.resize(frame, (newWidth, newHeight))
+    facesDetected = detector(frame)
     
     if len(facesDetected) != 0:
         # Se procesan los rostros detectados en la imagen
         for face in facesDetected:    
             shape = shapePredictor(frame, face)
-            faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
+            # POSIBILIDAD DE HACER UNA LLAMADA ASINCRONICA A UNA FUNCION QUE RETORNE LA IDENTIDAD
+            # DE UNA PERSONA
+            # faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
             
             # Se dibuja el rectangulo que encierra el rostro detectado
             x, y, w, h = face.left(), face.top(), face.width(), face.height()
