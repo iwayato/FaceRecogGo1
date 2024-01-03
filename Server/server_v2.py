@@ -6,7 +6,7 @@ imageHub = imagezmq.ImageHub()
 detector = functions.getDetector()
 
 sr = cv2.dnn_superres.DnnSuperResImpl_create()
-path = "./Models/FSRCNN_x4.pb"
+path = "./Models/ESPCN_x4.pb"
 sr.readModel(path)
 sr.setModel("espcn", 4)
 
