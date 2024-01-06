@@ -3,7 +3,7 @@ import dlib
 import cv2
 import numpy as np
 
-video = cv2.VideoCapture("./Videos/test_sm_res_crop.mp4")
+video = cv2.VideoCapture("./Videos/test_348_300_crop.mp4")
 
 # Resize
 # scaleFactor = 6
@@ -13,10 +13,10 @@ video = cv2.VideoCapture("./Videos/test_sm_res_crop.mp4")
 # newHeight = int(height * scaleFactor)
 
 # Super Resolution
-sr = cv2.dnn_superres.DnnSuperResImpl_create()
-path = "./Models/LapSRN_x4.pb"
-sr.readModel(path)
-sr.setModel("lapsrn", 4)
+# sr = cv2.dnn_superres.DnnSuperResImpl_create()
+# path = "./Models/ESPCN_x4.pb"
+# sr.readModel(path)
+# sr.setModel("espcn", 4)
 
 # predictorPath = './Predictors/shape_predictor_68_face_landmarks.dat'
 # faceRecogPath = './Models/dlib_face_recognition_resnet_model_v1.dat'
@@ -30,7 +30,7 @@ while True:
     ret, frame = video.read()
     if ret != False:
         # frame = cv2.resize(frame, (newWidth, newHeight))
-        frame = sr.upsample(frame)
+        # frame = sr.upsample(frame)
         facesDetected = detector(frame)
         
         for face in facesDetected:
@@ -62,8 +62,3 @@ while True:
 end = time.time()
 print(str(end - start) + "s")
 cv2.destroyAllWindows()
-
-        
-        
-    
-    
