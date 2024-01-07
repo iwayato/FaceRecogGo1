@@ -14,9 +14,9 @@ video = cv2.VideoCapture("./Videos/test_348_300_crop.mp4")
 
 # Super Resolution
 # sr = cv2.dnn_superres.DnnSuperResImpl_create()
-# path = "./Models/ESPCN_x4.pb"
+# path = "./Models/LapSRN_x4.pb"
 # sr.readModel(path)
-# sr.setModel("espcn", 4)
+# sr.setModel("lapsrn", 4)
 
 # predictorPath = './Predictors/shape_predictor_68_face_landmarks.dat'
 # faceRecogPath = './Models/dlib_face_recognition_resnet_model_v1.dat'
@@ -54,11 +54,11 @@ while True:
         # Se muestra el frame
         cv2.imshow('Face Detector (Server)', frame)
     else:
+        cv2.destroyAllWindows()
         break
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
 end = time.time()
-print(str(end - start) + "s")
-cv2.destroyAllWindows()
+
+print(str(end - start) + " s")
