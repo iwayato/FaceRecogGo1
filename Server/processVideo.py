@@ -6,7 +6,7 @@ import numpy as np
 video = cv2.VideoCapture("./Videos/test_348_300_crop.mp4")
 
 # Resize
-# scaleFactor = 6
+# scaleFactor = 2
 # width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
 # height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 # newWidth = int(width * scaleFactor)
@@ -25,7 +25,6 @@ detector = dlib.get_frontal_face_detector()
 # shapePredictor = dlib.shape_predictor(predictorPath)
 # faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 
-start = time.time()
 while True:
     ret, frame = video.read()
     if ret != False:
@@ -34,7 +33,6 @@ while True:
         facesDetected = detector(frame)
         
         for face in facesDetected:
-            print("Face detected at " + str(time.time() - start))
             # shape = shapePredictor(frame, face)
             
             # POSIBILIDAD DE HACER UNA LLAMADA ASINCRONICA A UNA FUNCION QUE RETORNE LA IDENTIDAD
@@ -58,7 +56,5 @@ while True:
         break
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        # cv2.imwrite("./Frames/4m.png", frame)
         break
-end = time.time()
-
-print(str(end - start) + " s")
