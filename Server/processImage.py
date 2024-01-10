@@ -5,7 +5,7 @@ import numpy as np
 import functions as func
 
 # Parametros
-DISTANCE = 1
+DISTANCE = 2
 SHARPENING = False
 KERNEL = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
 RESIZE = True

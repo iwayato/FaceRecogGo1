@@ -1,34 +1,49 @@
+import dlib
 import imagezmq
-import functions
-import cv2
+import functions as f
+import cv2 as cv
+import numpy as np
 
-# RESIZE_FACTOR = 2
-# FRAME_WIDTH = 348
-# FRAME_HEIGHT = 300
+# Parametros
+WIDTH = 348
+HEIGHT = 300
+RESIZE_FACTOR = 1.3
+SR_MODEL = "ESPCN"
+SR_FACTOR = 2
+UPSAMPLE = 1
 
-# sr = cv2.dnn_superres.DnnSuperResImpl_create()
-# path = "./Models/ESPCN_x4.pb"
-# sr.readModel(path)
-# sr.setModel("espcn", 4)
+# SR - Configuracion
+sr = cv.dnn_superres.DnnSuperResImpl_create()
+path = "./Models/" + SR_MODEL + "_x" + str(SR_FACTOR) + ".pb"
+sr.readModel(path)
+sr.setModel(SR_MODEL.lower(), SR_FACTOR)
 
+# Se inician imagezmq y modelos
 imageHub = imagezmq.ImageHub()
-# detector = functions.getDetector()
+predictorPath = './Predictors/shape_predictor_68_face_landmarks.dat'
+faceRecogPath = './Models/dlib_face_recognition_resnet_model_v1.dat'
+detector = dlib.get_frontal_face_detector()
+shapePredictor = dlib.shape_predictor(predictorPath)
+faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 
 while True:
     (rpiName, frame) = imageHub.recv_image()
     imageHub.send_reply(b'OK')
-    # frame = cv2.resize(frame, (FRAME_WIDTH * RESIZE_FACTOR, FRAME_HEIGHT * RESIZE_FACTOR))
-    # frame = sr.upsample(frame)
+    frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
+    frame = sr.upsample(frame)
+    facesDetected = detector(frame, UPSAMPLE)
     
-    # faces = detector(frame, 1)
-            
-    # for face in faces: 
-    #     x, y, w, h = face.left(), face.top(), face.width(), face.height()
-    #     cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2) 
+    for face in facesDetected:
+        shape = shapePredictor(frame, face)
+        faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
+        matchName = f.getBestMatches(list(faceDescriptor))
+        x, y, w, h = face.left(), face.top(), face.width(), face.height()
+        cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        print(matchName[0][0])
     
-    cv2.imshow('Server', frame)
+    cv.imshow('Server', frame)
     
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
-cv2.destroyAllWindows()
+cv.destroyAllWindows()
