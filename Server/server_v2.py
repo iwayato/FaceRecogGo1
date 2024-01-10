@@ -29,17 +29,18 @@ faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 while True:
     (rpiName, frame) = imageHub.recv_image()
     imageHub.send_reply(b'OK')
+    frame = cv.cvtColor(frame, cv.COLOR_GRAY2RGB)
     frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
     frame = sr.upsample(frame)
     facesDetected = detector(frame, UPSAMPLE)
     
     for face in facesDetected:
         shape = shapePredictor(frame, face)
+        x, y, w, h = face.left(), face.top(), face.width(), face.height()
         faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
         matchName = f.getBestMatches(list(faceDescriptor))
-        x, y, w, h = face.left(), face.top(), face.width(), face.height()
         cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        print(matchName[0][0])
+        cv.putText(frame, matchName, (x - 8, y - 8), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 255))
     
     cv.imshow('Server', frame)
     

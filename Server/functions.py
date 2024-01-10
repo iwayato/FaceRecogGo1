@@ -16,7 +16,12 @@ def getBestMatches(embedding: list):
     stringRep = "[" + ",".join(str(x) for x in embedding) + "]"
     cur.execute("SELECT name FROM embeddings ORDER BY embedding <-> %s LIMIT 1;", (stringRep,))
     rows = cur.fetchall()
-    return rows
+    if len(rows) == 0:
+        conn.close()
+        return "Desconocido"
+    else:
+        conn.close()
+        return rows[0][0]
 
 def getDetector():
     return dlib.get_frontal_face_detector()
