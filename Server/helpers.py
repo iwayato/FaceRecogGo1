@@ -26,7 +26,7 @@ faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 def saveEmbeddingInDB(name: str, embedding: list):
     conn = psy.connect('postgres://avnadmin:AVNS_zE37AWvXFs2CulFIeea@face-recog-db-face-recog-db.a.aivencloud.com:17725/defaultdb?sslmode=require')
     cur = conn.cursor()
-    cur.execute('INSERT INTO embeddings values (%s,%s)', (name, embedding))
+    cur.execute('INSERT INTO embeddings values (%s,%s);', (name, embedding))
     conn.commit()
     conn.close()
     
