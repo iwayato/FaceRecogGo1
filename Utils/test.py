@@ -9,3 +9,6 @@ async def call():
             # will return (1, 100, "abc'def")
             async for record in acur:
                 print(record)
+                
+# Guardar cierto frame del video
+# cv2.imwrite("./Frames/4m.png", frame)

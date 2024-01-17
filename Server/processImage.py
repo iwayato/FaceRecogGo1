@@ -1,8 +1,8 @@
 import cv2 as cv
 import dlib
 import sys
+import helpers
 import numpy as np
-import functions as func
 
 # Parametros
 DISTANCE = 2
@@ -45,10 +45,10 @@ facesDetected = detector(img, UPSAMPLE)
 for face in facesDetected:
     shape = shapePredictor(img, face)
     faceDescriptor = faceRecognitionModel.compute_face_descriptor(img, shape, 1)
-    matchName = func.getBestMatches(list(faceDescriptor))
+    matchName = helpers.getBestMatches(list(faceDescriptor))
     x, y, w, h = face.left(), face.top(), face.width(), face.height()
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    print(matchName[0][0])
+    cv.putText(img, matchName, (x - 8, y - 8), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 255)) 
 
 cv.imshow("Face at " + str(DISTANCE) + " m", img)
     

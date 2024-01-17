@@ -8,7 +8,7 @@ HEIGHT = 300
 RESIZE_FACTOR = 1.3
 SR_MODEL = "ESPCN"
 SR_FACTOR = 2
-UPSAMPLE = 0
+UPSAMPLE = 1
 
 # Configuracion Super Resolution
 sr = cv.dnn_superres.DnnSuperResImpl_create()
@@ -40,8 +40,8 @@ def getBestMatches(embedding: list):
     
 def processFrame(frame):
     # frame = cv.cvtColor(frame, cv.COLOR_GRAY2RGB)
-    # frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
-    # frame = sr.upsample(frame)
+    frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
+    frame = sr.upsample(frame)
     facesDetected = detector(frame, UPSAMPLE)
     for face in facesDetected:
         shape = shapePredictor(frame, face)
