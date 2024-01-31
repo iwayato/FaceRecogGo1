@@ -47,6 +47,7 @@ def processFrame(frame):
     facesDetected = detector(frame, UPSAMPLE)
     time_detec = time.time()
     for face in facesDetected:
+        # Landmarks
         shape = shapePredictor(frame, face)
         time_get_shape = time.time()
         faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
