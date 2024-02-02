@@ -2,6 +2,7 @@ import psycopg2 as psy
 import cv2 as cv
 import dlib
 import time
+import pickle
 
 # Parametros
 WIDTH = 348
@@ -40,30 +41,20 @@ def getBestMatches(embedding: list):
     return rows[0]
     
 def processFrame(frame):
-    start = time.time()
     # frame = cv.cvtColor(frame, cv.COLOR_GRAY2RGB)
     # frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
     frame = sr.upsample(frame)
     facesDetected = detector(frame, UPSAMPLE)
-    time_detec = time.time()
     for face in facesDetected:
         # Landmarks
         shape = shapePredictor(frame, face)
-        time_get_shape = time.time()
         faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
-        time_get_descript = time.time()
         matchName = getBestMatches(list(faceDescriptor))
-        time_get_match = time.time()
         x, y, w, h = face.left(), face.top(), face.width(), face.height()
         cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv.putText(frame, matchName, (x - 8, y - 8), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 255)) 
-    end = time.time()
-    print("Tiempo en detectar: " + str(time_detec - start) + " s")
-    try:
-        print("Tiempo en obtener landmarks: " + str(time_get_shape - time_detec) + " s")
-        print("Tiempo en obtener descriptor: " + str(time_get_descript - time_get_shape)[0:5] + " s")
-        print("Tiempo en identificar: " + str(time_get_match - time_get_descript)+ " s")
-    except:
-        print("No se detectó caras")
-    print("Tiempo total: " + str(end - start) + " s")
     return frame
+
+def processFaceChip(faceChip, landmarks):
+    faceDescriptor = faceRecognitionModel.compute_face_descriptor(faceChip)
+    return getBestMatches(list(faceDescriptor))
