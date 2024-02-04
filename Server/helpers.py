@@ -1,8 +1,7 @@
 import psycopg2 as psy
 import cv2 as cv
 import dlib
-import time
-import pickle
+import numpy as np
 
 # Parametros
 WIDTH = 348
@@ -26,11 +25,16 @@ shapePredictor = dlib.shape_predictor(predictorPath)
 faceRecognitionModel = dlib.face_recognition_model_v1(faceRecogPath)
 
 def saveEmbeddingInDB(name: str, embedding: list):
-    conn = psy.connect('postgres://avnadmin:AVNS_zE37AWvXFs2CulFIeea@face-recog-db-face-recog-db.a.aivencloud.com:17725/defaultdb?sslmode=require')
-    cur = conn.cursor()
-    cur.execute('INSERT INTO embeddings values (%s,%s);', (name, embedding))
-    conn.commit()
-    conn.close()
+    try:
+        conn = psy.connect('postgres://avnadmin:AVNS_zE37AWvXFs2CulFIeea@face-recog-db-face-recog-db.a.aivencloud.com:17725/defaultdb?sslmode=require')
+        cur = conn.cursor()
+        cur.execute('INSERT INTO embeddings values (%s,%s);', (name, embedding))
+        conn.commit()
+        conn.close()
+        print("Rostro guardado exitosamente")
+    except:
+        print("Ha ocurrido un error")
+
     
 def getBestMatches(embedding: list):
     conn = psy.connect('postgres://avnadmin:AVNS_zE37AWvXFs2CulFIeea@face-recog-db-face-recog-db.a.aivencloud.com:17725/defaultdb?sslmode=require')
@@ -43,10 +47,9 @@ def getBestMatches(embedding: list):
 def processFrame(frame):
     # frame = cv.cvtColor(frame, cv.COLOR_GRAY2RGB)
     # frame = cv.resize(frame, (int(WIDTH * RESIZE_FACTOR), int(HEIGHT * RESIZE_FACTOR)))
-    frame = sr.upsample(frame)
+    # frame = sr.upsample(frame)
     facesDetected = detector(frame, UPSAMPLE)
     for face in facesDetected:
-        # Landmarks
         shape = shapePredictor(frame, face)
         faceDescriptor = faceRecognitionModel.compute_face_descriptor(frame, shape, 1)
         matchName = getBestMatches(list(faceDescriptor))
@@ -55,6 +58,17 @@ def processFrame(frame):
         cv.putText(frame, matchName, (x - 8, y - 8), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 255)) 
     return frame
 
-def processFaceChip(faceChip, landmarks):
-    faceDescriptor = faceRecognitionModel.compute_face_descriptor(faceChip)
-    return getBestMatches(list(faceDescriptor))
+def getEmbeddingsFromDB():
+    conn = psy.connect('postgres://avnadmin:AVNS_zE37AWvXFs2CulFIeea@face-recog-db-face-recog-db.a.aivencloud.com:17725/defaultdb?sslmode=require')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM embeddings;")
+    rows = cur.fetchall()
+    conn.close()
+    data = [(e[0], eval(e[1])) for e in rows]
+    return data
+
+def distanceBetweenFaces(faceToRecognize, faceInDB):
+    return np.linalg.norm(np.array(faceToRecognize) - np.array(faceInDB), axis=0)
+
+def processFaceChip(faceChip):
+    return list(faceRecognitionModel.compute_face_descriptor(faceChip))
