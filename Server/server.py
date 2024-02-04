@@ -11,10 +11,9 @@ while True:
     name = "Desconocido"
     for nameAndEncoding in namesAndEncodings:
         distanceBetweenFaces = helpers.distanceBetweenFaces(faceEncoding, nameAndEncoding[1])
-        print(distanceBetweenFaces)
-        if distanceBetweenFaces <= 0.68:
+        if distanceBetweenFaces <= 0.60:
             name = nameAndEncoding[0]
-    # print(name)
+    print(name)
     cv.imshow('Face Chip', faceChip)
     imageHub.send_reply(b'OK')
     if cv.waitKey(1) & 0xFF == ord('q'):

@@ -17,8 +17,7 @@ while True:
         for faceRectangle in facesDetected:
             landmarks = shapePredictor(frame, faceRectangle)
             faceChip = dlib.get_face_chip(frame, landmarks) # faceChip es la imagen de solo el rostro detectado, alineado y escalado por default a 150x150
-            faceChip = cv.cvtColor(faceChip, cv.COLOR_BGR2GRAY)
-            cv.imshow("Go1", faceChip)
+            # cv.imshow("Go1", faceChip)
             sender.send_image("Img from Go1", faceChip)
     processFrame = not processFrame
     if cv.waitKey(1) & 0xFF == ord("q"):
