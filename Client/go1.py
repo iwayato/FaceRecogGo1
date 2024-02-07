@@ -1,6 +1,7 @@
 import cv2 as cv
 import imagezmq as zmq
 import dlib
+import time
 
 class camera:
     def __init__(self, cam_id = None, serverIP = None):
@@ -23,13 +24,18 @@ class camera:
         self.get_img()
         processFrame = True
         while(True):
-            self.success, self.frame = self.cap.read()
             if processFrame:
+                self.success, self.frame = self.cap.read()
+                self.frame = cv.flip(self.frame, -1)
+                start = time.time()
+                self.frame = cv.resize(self.frame, (1856, 800))
                 facesDetected = faceDetector(self.frame, 0)
                 for faceRectangle in facesDetected:
                     landmarks = shapePredictor(self.frame, faceRectangle)
                     faceChip = dlib.get_face_chip(self.frame, landmarks)
                     sender.send_image("Img from Go1", faceChip)
+            end = time.time()
+            print(end - start)
             processFrame = not processFrame
             if cv.waitKey(2) & 0xFF == ord('q'):
                 break
