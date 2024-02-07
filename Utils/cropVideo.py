@@ -1,13 +1,13 @@
 import cv2
 
 # Video de entrada
-sourceVideo = cv2.VideoCapture("./Videos/test_348_300.mp4")
+sourceVideo = cv2.VideoCapture("./Videos/test_webcam_on_Go1.mp4")
 
 # Video de salida
 fps = int(sourceVideo.get(cv2.CAP_PROP_FPS))
-outputFile = './Videos/test_348_300_crop.mp4'
+outputFile = './Videos/test_webcam_on_Go1_crop.mp4'
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-outputVideo = cv2.VideoWriter(outputFile, fourcc, fps, (348, 300))
+outputVideo = cv2.VideoWriter(outputFile, fourcc, fps, (640, 480))
 
 while True:
     ret, frame = sourceVideo.read()
@@ -15,7 +15,7 @@ while True:
     if not ret:
         break
     
-    frame = frame[0:300, 0:348]
+    frame = frame[0:480, 0:640]
     
     outputVideo.write(frame)
     

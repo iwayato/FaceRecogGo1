@@ -24,6 +24,7 @@ def getEmbeddingsFromDB():
     rows = cur.fetchall()
     conn.close()
     data = [(e[0], eval(e[1])) for e in rows]
+    print("Datos faciales obtenidos desde BBDD")
     return data
 
 def distanceBetweenFaces(faceToRecognize, faceInDB):
