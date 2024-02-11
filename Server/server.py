@@ -15,6 +15,7 @@ while True:
         distanceBetweenFaces = helpers.distanceBetweenFaces(faceEncoding, nameAndEncoding[1])
         if distanceBetweenFaces <= 0.60:
             name = nameAndEncoding[0]
+            break
     print(name)
     cv.imshow("Facechip from Go1", faceChip)
     imageHub.send_reply(b'OK')
