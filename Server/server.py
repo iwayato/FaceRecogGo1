@@ -1,12 +1,10 @@
 import imagezmq as zmq
 import cv2 as cv
 import helpers
-import time
 
 imageHub = zmq.ImageHub()
 namesAndEncodings = helpers.getEmbeddingsFromDB()
 
-# Size image webcam in Go1: 1280 x 960 (x0.5 = 640 x 480)
 while True:
     (msg, faceChip) = imageHub.recv_image()
     faceEncoding = helpers.processFaceChip(faceChip)

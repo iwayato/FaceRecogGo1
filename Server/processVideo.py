@@ -10,7 +10,7 @@ sourceVideo = cv2.VideoCapture("./Videos/test_webcam_on_Go1_crop.mp4")
 
 # Video de salida
 fps = int(sourceVideo.get(cv2.CAP_PROP_FPS))
-outputFile = './Videos/test_webcam_on_Go1_process.mp4'
+outputFile = './Videos/test_webcam_on_Go1_process_threshold_06.mp4'
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 outputVideo = cv2.VideoWriter(outputFile, fourcc, fps, (640, 480))
 
@@ -28,7 +28,7 @@ while True:
         name = "Desconocido"
         for nameAndEncoding in namesAndEncodings:
             distanceBetweenFaces = helpers.distanceBetweenFaces(faceEncoding, nameAndEncoding[1])
-            if distanceBetweenFaces <= 0.60:
+            if distanceBetweenFaces <= 0.6:
                 name = nameAndEncoding[0]
                 break
         cv2.putText(frame, name, (x + 6, y - 6), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
